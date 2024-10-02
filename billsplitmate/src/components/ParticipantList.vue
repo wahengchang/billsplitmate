@@ -1,33 +1,34 @@
 <template>
   <v-card>
-    <v-card-title class="text-h5 font-weight-bold primary white--text">
+    <v-card-title class="text-subtitle-1 font-weight-bold primary white--text d-flex justify-start align-center">
       Bill Split Calculator
+      <v-btn icon x-small @click="resetParticipants" flat>
+        <v-icon x-small color="red">mdi-refresh</v-icon>
+      </v-btn>
     </v-card-title>
-    <v-card-subtitle class="pt-2">
+    <v-card-subtitle class="pt-2 text-caption">
       Add participants and their expenses to calculate the split
     </v-card-subtitle>
     <v-card-text>
       <v-row align="center" class="mb-2">
         <v-col cols="12" sm="6">
-          <h3 class="text-h6">Participants</h3>
+          <h3 class="text-subtitle-2">Participants</h3>
         </v-col>
         <v-col cols="12" sm="6" class="text-sm-right">
-          <v-btn color="primary" @click="addParticipant">
-            <v-icon left>mdi-plus</v-icon>
+          <v-btn color="primary" small @click="addParticipant">
+            <v-icon small left>mdi-plus</v-icon>
             Add Participant
           </v-btn>
         </v-col>
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="participantsWithIndex"
+        :items="participantsWithCalculations"
         :items-per-page="-1"
         hide-default-footer
         dense
+        class="smaller-text"
       >
-        <template #[`item.index`]="{ item }">
-          {{ item.index }}
-        </template>
         <template #[`item.name`]="{ item }">
           <v-text-field
             v-model="item.name"
@@ -35,6 +36,7 @@
             dense
             hide-details
             single-line
+            class="smaller-input"
           ></v-text-field>
         </template>
         <template #[`item.amountPaid`]="{ item }">
@@ -47,29 +49,30 @@
             single-line
             prefix="$"
             :rules="[v => v >= 0 || 'Amount must be non-negative']"
+            class="smaller-input"
           ></v-text-field>
         </template>
         <template #[`item.toPay`]="{ item }">
           <v-chip
-            :color="item.toPay > 0 ? 'red' : 'green'"
+            :color="getChipColor(item.toPay)"
             text-color="white"
-            small
+            x-small
           >
             {{ item.toPay.toFixed(2) }}
           </v-chip>
         </template>
         <template #[`item.toReceive`]="{ item }">
           <v-chip
-            :color="item.toReceive > 0 ? 'green' : 'red'"
+            :color="getChipColor(item.toReceive)"
             text-color="white"
-            small
+            x-small
           >
             {{ item.toReceive.toFixed(2) }}
           </v-chip>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-btn icon small @click="removeParticipant(item)">
-            <v-icon>mdi-delete</v-icon>
+          <v-btn icon x-small @click="removeParticipant(item.id)">
+            <v-icon small>mdi-delete</v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -80,70 +83,81 @@
 <script>
 export default {
   name: 'ParticipantList',
+  props: {
+    participants: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
-      participants: [],
       headers: [
-        { text: '#', value: 'index', width: '5%' },
-        { text: 'Name', value: 'name', width: '25%' },
-        { text: 'Prepaid', value: 'amountPaid', width: '18%' },
-        { text: 'To Pay', value: 'toPay', width: '18%' },
-        { text: 'To Receive', value: 'toReceive', width: '18%' },
-        { text: 'Actions', value: 'actions', sortable: false, width: '16%' },
-      ],
+        { title: '#', value: 'index', width: '5%' },
+        { title: 'Name', value: 'name', width: '35%' },
+        { title: 'Amount Paid', value: 'amountPaid', width: '20%' },
+        { title: 'To Pay', value: 'toPay', width: '15%' },
+        { title: 'To Receive', value: 'toReceive', width: '15%' },
+        { title: 'Actions', value: 'actions', sortable: false, width: '10%' }
+      ]
     }
   },
   computed: {
-    participantsWithIndex() {
-      return this.participants.map((participant, index) => ({
-        ...participant,
-        index: index + 1
-      }))
+    participantsWithCalculations() {
+      const totalPaid = this.participants.reduce((sum, p) => sum + p.amountPaid, 0);
+      const averagePaid = totalPaid / this.participants.length;
+
+      return this.participants.map((participant, index) => {
+        const balance = participant.amountPaid - averagePaid;
+        return {
+          ...participant,
+          index: index + 1,
+          toPay: balance < 0 ? -balance : 0,
+          toReceive: balance > 0 ? balance : 0
+        };
+      });
     }
   },
   methods: {
     addParticipant() {
-      this.participants.push({
+      this.$emit('add-participant', {
         name: `Participant ${this.participants.length + 1}`,
-        amountPaid: 0,
-        toPay: 0,
-        toReceive: 0
+        amountPaid: 0
       })
-      this.calculateSplit()
     },
-    removeParticipant(item) {
-      const index = this.participants.findIndex(p => p.name === item.name)
-      if (index > -1) {
-        this.participants.splice(index, 1)
-        this.calculateSplit()
-      }
+    removeParticipant(id) {
+      this.$emit('remove-participant', id)
     },
     updateParticipant(item) {
-      const participant = this.participants.find(p => p.name === item.name)
-      if (participant) {
-        participant.amountPaid = Number(item.amountPaid)
-        if (participant.amountPaid < 0) participant.amountPaid = 0
-        this.calculateSplit()
-      }
-    },
-    calculateSplit() {
-      const totalExpense = this.participants.reduce((sum, p) => sum + p.amountPaid, 0)
-      const sharePerPerson = totalExpense / this.participants.length
-      
-      this.participants.forEach(p => {
-        const balance = p.amountPaid - sharePerPerson
-        if (balance > 0) {
-          p.toReceive = Number(balance.toFixed(2))
-          p.toPay = 0
-        } else {
-          p.toReceive = 0
-          p.toPay = Number((-balance).toFixed(2))
-        }
+      this.$emit('update-participant', {
+        ...item,
+        amountPaid: Number(item.amountPaid)
       })
-
-      // Update Vuex store
-      this.$store.dispatch('updateParticipants', this.participants)
+    },
+    getChipColor(value) {
+      if (value === 0) return 'gray';
+      return value > 0 ? 'green' : 'red';
+    },
+    resetParticipants() {
+      this.$emit('reset-participants')
     }
   }
 }
 </script>
+
+<style scoped>
+.v-data-table ::v-deep .v-data-table__wrapper {
+  overflow-x: auto;
+}
+
+.smaller-text ::v-deep .v-data-table__wrapper {
+  font-size: 0.875rem;
+}
+
+.smaller-input ::v-deep input {
+  font-size: 0.875rem;
+}
+
+.v-chip {
+  font-size: 0.75rem;
+}
+</style>

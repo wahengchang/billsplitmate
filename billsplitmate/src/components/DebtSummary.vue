@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <v-card>
     <v-card-title>Debt Summary</v-card-title>
@@ -15,14 +16,29 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
+/* eslint-disable vue/return-in-computed-property */
 export default {
   name: 'DebtSummary',
+  props: {
+    participants: {
+      type: Array,
+      required: true
+    }
+  },
   computed: {
-    ...mapGetters(['getDebts']),
     debts() {
-      return this.getDebts
+      const totalExpense = this.participants.reduce((sum, p) => sum + p.amountPaid, 0);
+      const averageExpense = totalExpense / this.participants.length;
+      
+      const result = this.participants.map(participant => {
+        const balance = participant.amountPaid - averageExpense;
+        return {
+          name: participant.name,
+          balance: Number(balance.toFixed(2))
+        };
+      });
+
+      return result;
     }
   }
 }
