@@ -1,0 +1,95 @@
+User Flow and User Story for SplitMate (Admin-Only Operations)
+In this scenario, the bill-splitting process will be managed by a single admin who handles all data input, payments, and calculations for the group. The app will streamline the process, ensuring that expenses are accurately divided and that reimbursements are clear.
+
+1. Verbosely Analyze the User and What Problem Are They Solving
+Who is the User?
+The user is an admin who takes responsibility for tracking and splitting expenses for a group of people. This admin can be a friend or an organizer who handles the financial management of group activities, making the process easier and more organized for everyone involved. The admin is the sole person inputting expenses, splitting costs, and notifying others of what they owe or are owed.
+
+What Problem Are They Solving?
+The key problem the admin is solving revolves around the accurate and fair division of expenses. There are two specific cases:
+
+One person pays for everything: When one person covers the entire cost of an event, the challenge is calculating how much each participant owes based on an equal division.
+
+Multiple people pay different amounts: This scenario is more complex. The admin must summarize all expenses, identify who overpaid, and ensure that those who underpaid are informed about how much they owe. The system should also track which participants need to pay and how much, as well as who should be reimbursed.
+
+Both scenarios aim to ensure transparency, fairness, and ease of tracking payments among group members, removing the need for manual calculations.
+
+2. Mapping the User Flow
+Case 1: One Person Pays for All – Split Equally
+Launch App:
+
+The admin opens the app and starts a new event for the bill-splitting process.
+Input Event Details:
+
+The admin names the event, selects the participants, and confirms that the expense will be split equally among them.
+Input Total Payment:
+
+The admin enters the total amount paid by one participant who covered all the costs (e.g., $100).
+Split Equally:
+
+The app automatically divides the total amount equally among all participants. For instance, if there are five participants, each will owe $20.
+View and Send Summary:
+
+The app displays a summary showing how much each person owes and to whom.
+The admin can share the summary with participants and send reminders if needed.
+Settle Payment:
+
+Participants send payments to the person who paid. The admin marks the payments as settled in the app once they’re received.
+Case 2: Multiple People Pay Different Amounts
+Launch App:
+
+The admin opens the app and starts a new event for the bill-splitting process.
+Input Event Details:
+
+The admin names the event, selects the participants, and confirms that multiple people have contributed different amounts.
+Input All Payments:
+
+The admin inputs the different amounts paid by various participants (e.g., Friend A paid $100, Friend B paid $30).
+The app allows the admin to add descriptions for each expense (e.g., "Dinner" or "Drinks").
+Summarize Total Expenses:
+
+The app calculates the total amount spent by all participants (e.g., $130 in total for the event).
+Calculate Individual Shares:
+
+The app calculates how much each participant should pay if the amount were split equally (e.g., if there are 5 people, each person owes $26).
+Determine Who Owes Whom:
+
+The app determines who needs to pay and who should be reimbursed.
+For instance, if Friend A paid $100 and their share is $26, others owe them $74.
+If Friend B paid $30 and their share is $26, they should be reimbursed $4, meaning Friend B doesn’t owe anything.
+View and Send Summary:
+
+The app presents a summary showing how much each participant owes or is owed and by whom.
+The admin shares this summary with all participants and sends reminders if necessary.
+Settle Payment:
+
+Participants send payments as indicated in the summary.
+The admin marks the payments as settled in the app once they are received.
+3. Writing the User Story
+User Story 1: One Person Pays for All, Split Equally
+As an admin,
+I want to input a single total expense that was paid by one person,
+so that I can divide the cost equally among all participants and ensure everyone knows how much they owe.
+
+Acceptance Criteria:
+
+The admin can input the total expense amount.
+The app automatically divides the total amount equally among all participants.
+The app generates a summary that shows how much each participant owes to the person who paid.
+The admin can share the summary and reminders with participants.
+The admin can track when payments are settled.
+User Story 2: Multiple People Pay Different Amounts
+As an admin,
+I want to input multiple payments made by different people,
+so that the app can summarize the expenses and calculate who should be reimbursed and who still needs to pay, ensuring everyone knows how much they owe or are owed.
+
+Acceptance Criteria:
+
+The admin can input the amounts paid by each participant.
+The app calculates the total expense and each person’s share.
+The app generates a summary that shows who owes money and who should be reimbursed.
+The app indicates how much each participant needs to pay or receive.
+The admin can share the summary and send reminders to participants.
+The admin can track when payments are settled.
+Conclusion
+The simplified user flow and stories focus on one admin managing the entire process for bill-splitting, with the app facilitating either an equal division of a single prepayment or calculating reimbursement when multiple people have paid different amounts. This ensures that the admin handles the input, while the app handles all complex calculations, presenting a clear summary for users to settle payments quickly and accurately.

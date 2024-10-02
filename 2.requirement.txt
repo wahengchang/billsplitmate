@@ -1,0 +1,173 @@
+1. Comprehensive Analysis of the Project: "Bill Split (SplitMate)"
+Overview: "SplitMate" is a bill-splitting web app designed to help groups of friends manage shared expenses easily and fairly. The core goal is to allow one person (admin) to handle the input of expenses and the calculation of how much each person owes or is owed after an event. The system should support two cases:
+
+One person pays for all, and the expenses are split equally.
+Multiple people pay different amounts, and the app calculates who needs to be reimbursed and by how much.
+The app will be built as a Single Page Application (SPA) using Vue.js with Vuetify for the UI. No login or authentication is required, and browser storage (localStorage) will be used to persist user input. This app focuses on client-side rendering for simplicity and fast user interaction.
+
+Key Features:
+
+Add participants and input payments made by one or multiple participants.
+Automatically calculate who owes whom and how much.
+Present a clear summary of the debt.
+No user accounts or logins, data stored in the browser.
+2. Task Decomposition
+Breaking the complex task into smaller, manageable subtasks for development:
+
+1. Frontend UI Design (Vue + Vuetify)
+Participants Management: Add, edit, and remove participants.
+Expense Input: Allow the admin to input expenses paid by participants.
+Display Summary: Present the calculated results (who owes whom).
+Interaction Handling: Ensure smooth interactivity using Vue.js lifecycle hooks and Vuetify components (dialogs, forms, tables).
+2. Calculation Logic
+Equal Split Logic: If one person pays, divide the total expense equally among all participants.
+Multiple Contributors Logic: Summarize expenses, calculate the debt distribution (who owes how much to whom).
+3. Storage & Persistence
+Browser Storage: Save and retrieve input data using localStorage to persist user entries across page reloads.
+4. Error Handling & Validations
+Ensure proper validation for user inputs (e.g., non-negative expenses, at least two participants).
+5. Test and Debugging
+Unit and integration tests for critical functions (e.g., debt calculation).
+3. Programmatic Steps
+Setup Project Environment:
+
+Create a Vue.js project with Vuetify for the UI framework.
+Set up basic project structure: components, services, utils, and store (for shared state).
+Participants Management:
+
+Create forms to input participant names.
+Store participants in localStorage.
+Expense Input:
+
+Create a UI to input expenses with validation checks.
+Store expense data in localStorage.
+Calculate Owed Amounts:
+
+Implement the function to calculate how much each person owes based on input.
+Handle two cases: (a) equal split (b) multiple contributions.
+Display Results:
+
+Create a UI to display how much each participant owes or is owed, with clarity on who should pay whom.
+Store User Data in Browser:
+
+Use localStorage to save participants and expense data.
+4. Algorithm
+The algorithm for the two core cases:
+
+Case 1: One Person Pays for All (Equal Split)
+Input: total_expense, participants
+Calculate: share_per_person = total_expense / num_of_participants
+Output: Each participant owes share_per_person to the payer.
+Case 2: Multiple People Pay Different Amounts
+Input: total_expenses, expenses_per_participant
+Calculate:
+Determine the total amount spent.
+Calculate the equal share per participant.
+For each participant:
+If they paid more than their share, they are owed the difference.
+If they paid less than their share, they owe the difference.
+Output: List of debts showing who owes whom and how much.
+5. Data Structures
+To organize and store data, we’ll use simple data structures like arrays and objects.
+
+Participants Array:
+
+js
+Copy code
+participants = [
+  { name: 'Friend A', amountPaid: 100 },
+  { name: 'Friend B', amountPaid: 30 },
+  // more participants...
+];
+Expense Object:
+
+js
+Copy code
+expenses = [
+  { name: 'Friend A', paid: 100 },
+  { name: 'Friend B', paid: 30 }
+];
+Debt Calculation Results:
+
+js
+Copy code
+debts = [
+  { owes: 'Friend B', to: 'Friend A', amount: 20 },
+  { owes: 'Friend C', to: 'Friend A', amount: 20 },
+  // more debts...
+];
+6. Design Patterns
+For this project, we’ll leverage the following design patterns:
+
+MVC (Model-View-Controller):
+
+The model holds the application state (participants, expenses).
+The view is responsible for rendering the user interface using Vuetify.
+The controller manages the business logic, such as handling calculations and UI interactions.
+Singleton Pattern for centralized access to localStorage handling.
+
+7. Interface of Data
+Input Data:
+Participants:
+Name (string)
+Amount paid (float)
+Expenses:
+Event name (string)
+List of participant payments (array)
+Output Data:
+Summary:
+Who owes whom and how much (array of debt objects).
+
+9. Writing the Doc: requirement.txt
+txt
+Copy code
+# Project: Bill Split (SplitMate)
+# Purpose: A bill-splitting SPA built using Vue.js and Vuetify with no login required, storing user data in browser storage.
+
+## 1. Project Description:
+SplitMate allows an admin to input group expenses and automatically calculate how much each participant owes or is owed. The app supports two cases:
+- One person pays for all, expenses are split equally.
+- Multiple people pay different amounts, and the app calculates reimbursements.
+
+## 2. Technical Stack:
+- **Frontend**: Vue.js (SPA)
+- **UI Framework**: Vuetify
+- **Data Storage**: Browser storage (localStorage)
+- **No Backend**: All data and logic are handled client-side.
+
+## 3. Features:
+- Add/edit/remove participants.
+- Input individual expenses or shared expenses.
+- Calculate how much each person owes or is owed (two cases).
+- Display results in a clear, user-friendly UI.
+- Persist user data (participants, expenses) using localStorage.
+
+## 4. Key Requirements:
+- **Frontend UI**:
+  - Use Vuetify for forms, lists, and modals.
+  - Create responsive views for desktop and mobile.
+  
+- **Data Storage**:
+  - Use `localStorage` to persist participant and expense data.
+
+- **Debt Calculation**:
+  - Case 1: One person pays -> Split equally among participants.
+  - Case 2: Multiple people pay -> Calculate reimbursement amounts.
+
+## 5. Algorithms:
+- Equal Split Calculation:
+  - Total cost / number of participants = Amount each person owes.
+  
+- Multiple Contributions Calculation:
+  - Calculate total expenses.
+  - Determine each participant's share.
+  - Calculate differences between paid amounts and owed amounts.
+  - Generate a list of who owes whom and how much.
+
+## 6. Validation:
+- Ensure inputs are valid (e.g., non-negative numbers, at least two participants).
+
+## 7. Future Considerations:
+- Potential integration with payment gateways.
+- Feature to send payment requests via email or SMS.
+This requirement.txt document provides a lean and specific overview of the technical requirements for the "Bill Split (SplitMate)" project, ensuring clear guidance for the development team.

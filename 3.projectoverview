@@ -1,0 +1,35 @@
+# SplitMate Project Overview
+
+## Project Configuration
+
+### Vue CLI version
+@vue/cli 5.0.8 (or latest stable version)
+
+### Node version
+v16.14.0 (or latest LTS version)
+
+### npm version
+8.3.1 (or compatible with the Node version)
+
+## Dependencies
+
+- Vue: ^3.2.13
+- Vuetify: ^3.0.0
+- Vuex: ^4.0.0
+- Core-js: ^3.8.3
+
+## Dev Dependencies
+
+- @babel/core: ^7.12.16
+- @babel/eslint-parser: ^7.12.16
+- @vue/cli-plugin-babel: ~5.0.0
+- @vue/cli-plugin-eslint: ~5.0.0
+- @vue/cli-service: ~5.0.0
+- eslint: ^7.32.0
+- eslint-plugin-vue: ^8.0.3
+- sass: ^1.32.7
+- sass-loader: ^12.0.0
+- vue-cli-plugin-vuetify: ~2.5.8
+- webpack-plugin-vuetify: ^2.0.0-alpha.0
+
+## Project Structure
