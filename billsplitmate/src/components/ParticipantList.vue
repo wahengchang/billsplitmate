@@ -1,58 +1,79 @@
 <template>
   <v-card>
-    <v-card-title>
-      Participants
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model.number="participantCount"
-        type="number"
-        label="Number of Participants"
-        hide-details
-        class="mr-2"
-        style="max-width: 200px;"
-      ></v-text-field>
-      <v-btn color="primary" @click="createParticipants" :disabled="!participantCount">
-        Add Participants
-      </v-btn>
+    <v-card-title class="text-h5 font-weight-bold primary white--text">
+      Bill Split Calculator
     </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="participants"
-      :items-per-page="-1"
-      hide-default-footer
-    >
-      <template v-slot:headers>
-        <th class="text-left">Name</th>
-        <th class="text-left">Prepaid</th>
-        <th class="text-left">To Pay</th>
-        <th class="text-left">To Receive</th>
-      </template>
-      <template v-slot:[`item.name`]="{ item }">
-        <v-text-field
-          v-model="item.name"
-          @input="updateParticipant(item)"
-          dense
-          hide-details
-          single-line
-        ></v-text-field>
-      </template>
-      <template v-slot:[`item.amountPaid`]="{ item }">
-        <v-text-field
-          v-model.number="item.amountPaid"
-          @input="updateParticipant(item)"
-          type="number"
-          dense
-          hide-details
-          single-line
-        ></v-text-field>
-      </template>
-      <template v-slot:[`item.toPay`]="{ item }">
-        {{ item.toPay.toFixed(2) }}
-      </template>
-      <template v-slot:[`item.toReceive`]="{ item }">
-        {{ item.toReceive.toFixed(2) }}
-      </template>
-    </v-data-table>
+    <v-card-subtitle class="pt-2">
+      Add participants and their expenses to calculate the split
+    </v-card-subtitle>
+    <v-card-text>
+      <v-row align="center" class="mb-2">
+        <v-col cols="12" sm="6">
+          <h3 class="text-h6">Participants</h3>
+        </v-col>
+        <v-col cols="12" sm="6" class="text-sm-right">
+          <v-btn color="primary" @click="addParticipant">
+            <v-icon left>mdi-plus</v-icon>
+            Add Participant
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-data-table
+        :headers="headers"
+        :items="participantsWithIndex"
+        :items-per-page="-1"
+        hide-default-footer
+        dense
+      >
+        <template #[`item.index`]="{ item }">
+          {{ item.index }}
+        </template>
+        <template #[`item.name`]="{ item }">
+          <v-text-field
+            v-model="item.name"
+            @input="updateParticipant(item)"
+            dense
+            hide-details
+            single-line
+          ></v-text-field>
+        </template>
+        <template #[`item.amountPaid`]="{ item }">
+          <v-text-field
+            v-model.number="item.amountPaid"
+            @input="updateParticipant(item)"
+            type="number"
+            dense
+            hide-details
+            single-line
+            prefix="$"
+            :rules="[v => v >= 0 || 'Amount must be non-negative']"
+          ></v-text-field>
+        </template>
+        <template #[`item.toPay`]="{ item }">
+          <v-chip
+            :color="item.toPay > 0 ? 'red' : 'green'"
+            text-color="white"
+            small
+          >
+            {{ item.toPay.toFixed(2) }}
+          </v-chip>
+        </template>
+        <template #[`item.toReceive`]="{ item }">
+          <v-chip
+            :color="item.toReceive > 0 ? 'green' : 'red'"
+            text-color="white"
+            small
+          >
+            {{ item.toReceive.toFixed(2) }}
+          </v-chip>
+        </template>
+        <template #[`item.actions`]="{ item }">
+          <v-btn icon small @click="removeParticipant(item)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -61,29 +82,49 @@ export default {
   name: 'ParticipantList',
   data() {
     return {
-      participantCount: 0,
       participants: [],
       headers: [
+        { text: '#', value: 'index', width: '5%' },
         { text: 'Name', value: 'name', width: '25%' },
-        { text: 'Prepaid', value: 'amountPaid', width: '25%' },
-        { text: 'To Pay', value: 'toPay', width: '25%' },
-        { text: 'To Receive', value: 'toReceive', width: '25%' },
+        { text: 'Prepaid', value: 'amountPaid', width: '18%' },
+        { text: 'To Pay', value: 'toPay', width: '18%' },
+        { text: 'To Receive', value: 'toReceive', width: '18%' },
+        { text: 'Actions', value: 'actions', sortable: false, width: '16%' },
       ],
     }
   },
+  computed: {
+    participantsWithIndex() {
+      return this.participants.map((participant, index) => ({
+        ...participant,
+        index: index + 1
+      }))
+    }
+  },
   methods: {
-    createParticipants() {
-      this.participants = Array(this.participantCount).fill().map((_, index) => ({
-        name: `Participant ${index + 1}`,
+    addParticipant() {
+      this.participants.push({
+        name: `Participant ${this.participants.length + 1}`,
         amountPaid: 0,
         toPay: 0,
         toReceive: 0
-      }))
+      })
+      this.calculateSplit()
+    },
+    removeParticipant(item) {
+      const index = this.participants.findIndex(p => p.name === item.name)
+      if (index > -1) {
+        this.participants.splice(index, 1)
+        this.calculateSplit()
+      }
     },
     updateParticipant(item) {
-      // Ensure amountPaid is a number
-      item.amountPaid = Number(item.amountPaid)
-      this.calculateSplit()
+      const participant = this.participants.find(p => p.name === item.name)
+      if (participant) {
+        participant.amountPaid = Number(item.amountPaid)
+        if (participant.amountPaid < 0) participant.amountPaid = 0
+        this.calculateSplit()
+      }
     },
     calculateSplit() {
       const totalExpense = this.participants.reduce((sum, p) => sum + p.amountPaid, 0)

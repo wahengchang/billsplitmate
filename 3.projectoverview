@@ -1,35 +1,87 @@
-# SplitMate Project Overview
+Here's a high-level overview document outlining the architecture of the SplitMate project based on the provided information:
+
+# SplitMate Project Architecture Overview
 
 ## Project Configuration
 
-### Vue CLI version
-@vue/cli 5.0.8 (or latest stable version)
+- Vue CLI version: @vue/cli 5.0.8
+- Node version: v16.14.0 (LTS)
+- npm version: 8.3.1
 
-### Node version
-v16.14.0 (or latest LTS version)
-
-### npm version
-8.3.1 (or compatible with the Node version)
-
-## Dependencies
+## Core Dependencies
 
 - Vue: ^3.2.13
 - Vuetify: ^3.0.0
 - Vuex: ^4.0.0
 - Core-js: ^3.8.3
 
-## Dev Dependencies
-
-- @babel/core: ^7.12.16
-- @babel/eslint-parser: ^7.12.16
-- @vue/cli-plugin-babel: ~5.0.0
-- @vue/cli-plugin-eslint: ~5.0.0
-- @vue/cli-service: ~5.0.0
-- eslint: ^7.32.0
-- eslint-plugin-vue: ^8.0.3
-- sass: ^1.32.7
-- sass-loader: ^12.0.0
-- vue-cli-plugin-vuetify: ~2.5.8
-- webpack-plugin-vuetify: ^2.0.0-alpha.0
-
 ## Project Structure
+
+The SplitMate project follows a standard Vue CLI project structure with additional configurations for Vuetify and Vuex. Here's an overview of the main components and their organization:
+
+```
+SplitMate/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── router/
+│   ├── store/
+│   ├── views/
+│   ├── App.vue
+│   └── main.js
+├── tests/
+├── .eslintrc.js
+├── babel.config.js
+├── package.json
+└── vue.config.js
+```
+
+## Key Modules and Their Interactions
+
+1. **Vue 3**: The core framework for building the user interface.
+2. **Vuetify 3**: Provides pre-built Vue components and a Material Design framework.
+3. **Vuex 4**: State management library for Vue applications.
+4. **Vue Router**: Handles navigation and routing within the application.
+
+These modules interact as follows:
+
+- Vue 3 serves as the foundation, with components defined in the `src/components/` directory.
+- Vuetify components are used throughout the application for consistent UI design.
+- Vuex manages the global state, with store modules likely defined in `src/store/`.
+- Vue Router manages navigation between different views in the `src/views/` directory.
+
+## Module, Folder, and Team Responsibility Table
+
+| Module/Folder | Purpose | Responsible Team |
+|---------------|---------|------------------|
+| src/components/ | Reusable Vue components | Frontend |
+| src/views/ | Page-level Vue components | Frontend |
+| src/router/ | Application routing | Frontend |
+| src/store/ | Vuex state management | Frontend |
+| src/assets/ | Static assets (images, fonts, etc.) | Frontend |
+| public/ | Public static assets | Frontend |
+| tests/ | Unit and integration tests | Frontend |
+
+## Development Workflow
+
+1. Components are developed in the `src/components/` directory.
+2. Views (pages) are created in the `src/views/` directory.
+3. Routing is configured in `src/router/index.js`.
+4. Global state management is handled in `src/store/index.js` and related modules.
+5. Styling is likely done using Vuetify components and SASS for custom styles.
+6. Unit tests are written in the `tests/` directory.
+
+## Build and Deployment
+
+The project uses Vue CLI for development, building, and deployment:
+
+- Development server: `npm run serve`
+- Production build: `npm run build`
+- Linting: `npm run lint`
+
+The built files will be generated in the `dist/` directory, which can be deployed to a web server or hosting platform.
+
+## Conclusion
+
+The SplitMate project is a modern Vue 3 application with a well-organized structure, utilizing Vuetify for UI components and Vuex for state management. The frontend team is responsible for all aspects of the application, from component development to testing and deployment.
