@@ -1,22 +1,21 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
-      <v-toolbar-title>SplitMate</v-toolbar-title>
-    </v-app-bar>
-
-    <v-main>
-      <v-container>
-        <router-view></router-view>
-      </v-container>
-    </v-main>
-  </v-app>
+  <div id="app">
+    <router-view/>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  data: () => ({
-    //
-  }),
+  name: 'App'
 }
 </script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+</style>

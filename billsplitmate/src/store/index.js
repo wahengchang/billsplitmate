@@ -2,19 +2,27 @@ import { createStore } from 'vuex'
 
 export default createStore({
     state: {
+        expenses: [],
         participants: []
     },
-    getters: {
-        getParticipants: state => state.participants
-    },
     mutations: {
-        SET_PARTICIPANTS(state, participants) {
-            state.participants = participants
+        ADD_EXPENSE(state, expense) {
+            state.expenses.push(expense)
+        },
+        ADD_PARTICIPANT(state, participant) {
+            state.participants.push(participant)
         }
     },
     actions: {
-        updateParticipants({ commit }, participants) {
-            commit('SET_PARTICIPANTS', participants)
+        addExpense({ commit }, expense) {
+            commit('ADD_EXPENSE', expense)
+        },
+        addParticipant({ commit }, participant) {
+            commit('ADD_PARTICIPANT', participant)
         }
+    },
+    getters: {
+        allExpenses: state => state.expenses,
+        allParticipants: state => state.participants
     }
 })

@@ -1,20 +1,21 @@
 <template>
   <div class="home">
-    <h1>Welcome to SplitMate</h1>
-    <v-container>
-      <ParticipantList />
-    </v-container>
+    <h1>Bill Split Mate</h1>
+    <ParticipantList />
+    <DebtSummary />
+    <!-- Add an ExpenseForm component here if you have one -->
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import ParticipantList from '@/components/ParticipantList.vue';
+import ParticipantList from '@/components/ParticipantList.vue'
+import DebtSummary from '@/components/DebtSummary.vue'
 
-export default defineComponent({
+export default {
   name: 'HomeView',
   components: {
     ParticipantList,
-  },
-});
+    DebtSummary
+  }
+}
 </script>
